@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.HomeProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.HomeProduct">
+        <id column="DISPLAY_ID" property="displayId" />
+        <result column="CATEGORY_ID" property="categoryId" />
+        <result column="PRODUCT_ID" property="productId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        DISPLAY_ID, CATEGORY_ID, PRODUCT_ID
+    </sql>
+    <insert id="addDisplayById">
+        INSERT INTO HOMEPRODUCT VALUES (null,#{categoryId},#{productId})
+    </insert>
+    <select id="getProductCategories" resultType="band.zhaozhao.entity.HomeProduct">
+        SELECT h.PRODUCT_ID, p.PRODUCT_NAME, i.IMAGE_URL
+        FROM HOMEPRODUCT h
+                 JOIN PRODUCT p ON h.PRODUCT_ID = p.PRODUCT_ID
+                 JOIN IMAGE i ON p.IMAGE_ID = i.IMAGE_ID
+        WHERE h.CATEGORY_ID = #{category_Id}
+          AND p.PRODUCT_STATUS = '上架'  AND p.IS_DELETE = 1
+    </select>
+
+
+</mapper>

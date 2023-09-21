@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.DeliveryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Delivery">
+        <id column="DELIVERY_ID" property="deliveryId" />
+        <result column="DELIVERY_NAME" property="deliveryName" />
+        <result column="DELIVERY_PHONE" property="deliveryPhone" />
+        <result column="DELIVERY_PASSWORD" property="deliveryPassword" />
+        <result column="GENDER" property="gender" />
+        <result column="ADDRESS_ID" property="addressId" />
+        <result column="BALANCE" property="balance" />
+        <result column="ROLE" property="role" />
+        <result column="IS_DELETE" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        DELIVERY_ID, DELIVERY_NAME, DELIVERY_PHONE, DELIVERY_PASSWORD, GENDER, ADDRESS_ID, BALANCE, ROLE
+    </sql>
+    <insert id="registerDelivery">
+    INSERT INTO DELIVERY VALUES (null, #{deliveryName}, #{deliveryPhone},#{deliveryPassword}, #{gender},null, 0,#{role},1)
+    </insert>
+
+    <update id="updateBalanceByDeliveryId">
+        UPDATE DELIVERY
+        SET BALANCE = #{newBalance}
+        WHERE DELIVERY_ID = #{deliveryId} AND IS_DELETE = 1
+    </update>
+    <update id="modDeliveryByDeliveryId">
+        UPDATE DELIVERY
+        SET DELIVERY_NAME = #{deliveryName}, DELIVERY_PHONE = #{deliveryPhone}, DELIVERY_PASSWORD = #{deliveryPassword}, GENDER = #{gender},BALANCE = #{balance}, ROLE = #{role}
+        WHERE DELIVERY_ID = #{deliveryId} AND IS_DELETE = 1
+    </update>
+    <update id="deleteDeliverByDeliveryId">
+        UPDATE DELIVERY
+        SET IS_DELETE = 0
+        WHERE DELIVERY_ID = #{deliveryId}
+    </update>
+    <select id="selectPhone" resultType="java.lang.String">
+        SELECT DELIVERY_PHONE
+        FROM DELIVERY
+        WHERE DELIVERY_PHONE = #{deliveryPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectPassword" resultType="java.lang.String">
+        SELECT DELIVERY_PASSWORD
+        FROM DELIVERY
+        WHERE DELIVERY_PHONE = #{deliveryPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectDeliveryIdByDeliveryPhone" resultType="java.math.BigDecimal">
+        SELECT DELIVERY_ID
+        FROM DELIVERY
+        WHERE DELIVERY_PHONE = #{deliveryPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectBalanceByDeliveryId" resultType="java.math.BigDecimal">
+        SELECT BALANCE
+        FROM DELIVERY
+        WHERE DELIVERY_ID = #{deliveryId} AND IS_DELETE = 1
+    </select>
+    <select id="selectDeliveryById" resultType="band.zhaozhao.entity.Delivery">
+        SELECT *
+        FROM DELIVERY
+        WHERE DELIVERY_ID = #{deliveryId} AND IS_DELETE = 1
+    </select>
+    <select id="selectAllDelivery" resultType="band.zhaozhao.entity.Delivery">
+        SELECT *
+        FROM (
+                 SELECT "DELIVERY".*,
+                        ROW_NUMBER() OVER(ORDER BY DELIVERY_ID ASC ) AS row_num
+                 FROM "DELIVERY"
+                 WHERE IS_DELETE = 1
+             ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectByName" resultType="band.zhaozhao.entity.Delivery">
+        SELECT *
+        FROM (
+                 SELECT "DELIVERY".*,
+                        ROW_NUMBER() OVER(ORDER BY DELIVERY_ID ASC ) AS row_num
+                 FROM "DELIVERY"
+                 Where "DELIVERY".DELIVERY_NAME like '%'||#{deliveryName}||'%' AND IS_DELETE = 1
+             ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectNameByPhone" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DELIVERY_NAME
+        FROM DELIVERY
+        WHERE DELIVERY_PHONE = #{deliveryPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectDeliveryIdByDeliveryPhone1" resultType="java.lang.Integer"
+            parameterType="java.lang.String">
+        SELECT DELIVERY_ID
+        FROM DELIVERY
+        WHERE DELIVERY_PHONE = #{deliveryPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectAllDeliveries" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM DELIVERY
+        WHERE IS_DELETE = 1
+    </select>
+    <select id="selectAllDeliveriesByName" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM DELIVERY
+        WHERE IS_DELETE = 1 AND DELIVERY_NAME like '%'||#{deliveryName}||'%'
+    </select>
+
+
+</mapper>

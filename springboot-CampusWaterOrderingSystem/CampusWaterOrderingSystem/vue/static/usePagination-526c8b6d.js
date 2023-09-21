@@ -1,0 +1,1 @@
+import{r as e}from"./index-2dac3e0d.js";const a={total:0,currentPage:1,pageSizes:[10,20,50],pageSize:10,layout:"total, sizes, prev, pager, next, jumper"};function t(t={}){const n=e({...a,...t});return{paginationData:n,handleCurrentChange:e=>{n.currentPage=e},handleSizeChange:e=>{n.pageSize=e}}}export{t as u};

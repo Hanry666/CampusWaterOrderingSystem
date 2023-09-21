@@ -1,0 +1,87 @@
+{
+	"pages": [ 
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "校园订水配送系统"
+			}
+		},
+		{
+			"path": "pages/pay/index",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
+		},
+		{
+			"path":"pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path":"pages/address/index",
+			"style": {
+				"navigationBarTitleText": "地址"
+			}
+		},
+		{
+			"path":"pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path":"pages/shopping/index",
+			"style": {
+				"navigationBarTitleText": "购物车"
+			}
+		},
+		{
+			"path":"pages/reg/index",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path":"pages/list/index",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		}
+	],
+	"tabBar":{
+		"color":"gray",
+		"selectedColor":"#3333ff",
+		"list":[
+			{
+				"pagePath":"pages/index/index",
+				"text":"首页",
+				"iconPath":"./static/icons/list.png",
+				"selectedIconPath":"./static/icons/se_list.png"
+			},
+			{
+				"pagePath":"pages/list/index",
+				"text":"订单",
+				"iconPath":"./static/icons/buy.png",
+				"selectedIconPath":"./static/icons/se_buy.png"
+			},
+			{
+				"pagePath":"pages/my/index",
+				"text":"我的",
+				"iconPath":"./static/icons/my.png",
+				"selectedIconPath":"./static/icons/se_my.png"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"easycom": {
+		"custom": {  
+	        "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue" 
+		}
+	}
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.OrderProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.OrderProduct">
+        <id column="ORDER_ID" property="orderId" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="PRODUCT_QUANTITY" property="productQuantity" />
+        <result column="ORDER_PRICE" property="orderPrice" />
+        <result column="ADDRESS_ID" property="addressId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ORDER_ID, PRODUCT_ID, PRODUCT_QUANTITY, ORDER_PRICE
+    </sql>
+    <insert id="addOrderProduct">
+        INSERT INTO "ORDERPRODUCT" VALUES (#{orderId},#{productId},#{productQuantity},#{orderPrice},#{addressId})
+    </insert>
+    <update id="addAddressIdByOrderId">
+        UPDATE ORDERPRODUCT
+        SET ADDRESS_ID = #{addressId}
+        WHERE ORDER_ID = #{orderId}
+    </update>
+    <select id="selectByOrderId" resultType="band.zhaozhao.entity.OrderProduct">
+        SELECT o.PRODUCT_ID, p.PRODUCT_NAME, o.PRODUCT_QUANTITY, s.TOTAL_AMOUNT
+        FROM ORDERPRODUCT o
+                 JOIN PRODUCT p ON o.PRODUCT_ID = p.PRODUCT_ID
+                 JOIN ORDERS s ON o.ORDER_ID = s.ORDER_ID
+        WHERE o.ORDER_ID = #{order_Id} AND p.IS_DELETE = 1
+    </select>
+    <select id="selectAllOrders" resultType="band.zhaozhao.entity.OrderProduct">
+        SELECT DISTINCT u.PRIORITY,o.ORDER_ID, s.ORDER_STATUS, o.ORDER_PRICE, u.USER_NAME, u.USER_PHONE, a.CAMPUS, a.BUILDING, a.HOUSE_NUMBER, s.ORDER_NUMBER
+        FROM ORDERPRODUCT o
+                 JOIN ORDERS s ON o.ORDER_ID = s.ORDER_ID
+                 JOIN USERS u ON s.USER_ID = u.USER_ID
+                 JOIN ADDRESS a ON o.ADDRESS_ID = a.ADDRESS_ID
+        WHERE s.ORDER_STATUS = '已支付' AND u.IS_DELETE = 1
+        ORDER BY u.PRIORITY  DESC
+    </select>
+    <select id="selectOrderPriceByOrderId" resultType="java.math.BigDecimal">
+        SELECT DISTINCT ORDER_PRICE
+        FROM ORDERPRODUCT
+        WHERE ORDER_ID = #{orderId}
+    </select>
+
+</mapper>

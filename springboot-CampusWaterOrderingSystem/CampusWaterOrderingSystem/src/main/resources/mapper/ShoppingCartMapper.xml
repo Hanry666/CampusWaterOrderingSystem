@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.ShoppingCartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.ShoppingCart">
+        <id column="CART_ID" property="cartId" />
+        <result column="USER_ID" property="userId" />
+        <result column="TOTAL_AMOUNT" property="totalAmount" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        CART_ID, USER_ID, TOTAL_AMOUNT
+    </sql>
+    <insert id="addCart">
+        INSERT INTO SHOPPINGCART VALUES (null, #{userId}, 0)
+    </insert>
+    <update id="addByCartId">
+        UPDATE SHOPPINGCART
+        SET TOTAL_AMOUNT = #{totalAmount}
+        WHERE CART_ID = #{cartId}
+    </update>
+    <select id="selectByUserId" resultType="java.lang.Integer">
+        SELECT CART_ID
+        FROM SHOPPINGCART
+        WHERE USER_ID = #{userId}
+    </select>
+
+</mapper>

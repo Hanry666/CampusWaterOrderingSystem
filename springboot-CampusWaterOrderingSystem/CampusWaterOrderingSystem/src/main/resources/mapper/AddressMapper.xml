@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.AddressMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Address">
+        <id column="ADDRESS_ID" property="addressId" />
+        <result column="CAMPUS" property="campus" />
+        <result column="BUILDING" property="building" />
+        <result column="HOUSE_NUMBER" property="houseNumber" />
+        <result column="USER_ID" property="userId"/>
+        <result column="IS_DELETE" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ADDRESS_ID, CAMPUS, BUILDING, HOUSE_NUMBER
+    </sql>
+    <insert id="addAddressByUserId">
+        INSERT INTO ADDRESS
+        SELECT null, #{campus}, #{building}, #{houseNumber}, #{userId},1
+        FROM dual
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM ADDRESS
+            WHERE CAMPUS = #{campus}
+              AND BUILDING = #{building}
+              AND HOUSE_NUMBER = #{houseNumber}
+              AND USER_ID = #{userId}
+        )
+    </insert>
+    <update id="modAddress">
+        UPDATE ADDRESS
+        SET CAMPUS = #{campus}, BUILDING = #{building}, HOUSE_NUMBER = #{houseNumber}
+        WHERE ADDRESS_ID = #{addressId} and IS_DELETE = 1
+    </update>
+    <update id="deleteAddressByAddressId">
+        UPDATE ADDRESS
+        SET IS_DELETE = 0
+        WHERE ADDRESS_ID = #{addressId} and IS_DELETE = 1
+    </update>
+
+    <select id="selectAllAddressByUserId" resultType="band.zhaozhao.entity.Address">
+        SELECT ADDRESS_ID, CAMPUS, BUILDING, HOUSE_NUMBER
+        FROM ADDRESS
+        WHERE IS_DELETE = 1 and USER_ID = #{userId}
+        ORDER BY ADDRESS_ID
+    </select>
+    <select id="selectAddressIdByUserId" resultType="java.math.BigDecimal">
+        SELECT ADDRESS_ID
+        FROM ADDRESS
+        WHERE USER_ID = #{userId} AND CAMPUS = #{campus} AND BUILDING = #{building} AND HOUSE_NUMBER = #{houseNumber} AND IS_DELETE = 1
+    </select>
+    <select id="selectAddressByAddressId" resultType="band.zhaozhao.entity.Address">
+        SELECT *
+        FROM ADDRESS
+        WHERE ADDRESS_ID = #{addressId} AND IS_DELETE = 1
+        ORDER BY ADDRESS_ID
+    </select>
+
+
+</mapper>

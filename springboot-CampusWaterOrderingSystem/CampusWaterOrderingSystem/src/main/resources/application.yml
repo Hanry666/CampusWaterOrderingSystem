@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@43.138.82.57:1521:ORCL
+    username: Zzhaozhao
+    password: oracle
+
+
+server:
+  port: 8899
+  ssl:
+    key-store: classpath:zhaozhao.band.jks
+    key-store-password: yupia61t90u
+    key-store-type: jks

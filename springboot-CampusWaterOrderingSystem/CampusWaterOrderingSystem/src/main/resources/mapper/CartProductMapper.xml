@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.CartProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.CartProduct">
+        <id column="CART_ID" property="cartId" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="PRODUCT_QUANTITY" property="productQuantity" />
+        <result column="CART_PRICE" property="cartPrice" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        CART_ID, PRODUCT_ID, PRODUCT_QUANTITY, CART_PRICE, IS_DELETE
+    </sql>
+    <insert id="addProducts">
+        INSERT INTO CARTPRODUCT VALUES (#{cartId},#{productId},#{productQuantity},#{cartPrice},1)
+    </insert>
+    <delete id="updateProduct">
+       DELETE FROM CARTPRODUCT
+      WHERE PRODUCT_ID = #{productId}
+    </delete>
+    <select id="selectAllByUserId" resultType="band.zhaozhao.entity.CartProduct">
+        SELECT c.CART_ID, p.PRODUCT_ID, p.PRODUCT_NAME, SUM(c.PRODUCT_QUANTITY) AS PRODUCT_QUANTITY, SUM(c.CART_PRICE) AS CART_PRICE
+        FROM CARTPRODUCT c
+                 JOIN PRODUCT p ON c.PRODUCT_ID = p.PRODUCT_ID
+                 JOIN SHOPPINGCART s ON c.CART_ID = s.CART_ID
+        WHERE s.USER_ID = #{userId}
+        GROUP BY c.CART_ID, p.PRODUCT_ID, p.PRODUCT_NAME, c.CART_PRICE
+    </select>
+    <select id="getSumPrice" resultType="java.math.BigDecimal">
+        select sum(CART_PRICE) AS CART_PRICE
+        FROM CARTPRODUCT
+        WHERE CART_ID = #{cartId}
+    </select>
+
+</mapper>

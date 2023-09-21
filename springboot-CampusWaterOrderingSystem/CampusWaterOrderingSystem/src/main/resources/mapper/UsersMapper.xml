@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.UsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Users">
+        <id column="USER_ID" property="userId" />
+        <result column="USER_NAME" property="userName" />
+        <result column="USER_PHONE" property="userPhone" />
+        <result column="USER_PASSWORD" property="userPassword" />
+        <result column="GENDER" property="gender" />
+        <result column="ADDRESS_ID" property="addressId" />
+        <result column="BALANCE" property="balance" />
+        <result column="ROLE" property="role" />
+        <result column="PRIORITY" property="priority" />
+        <result column="IS_DELETE" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        USER_ID, USER_NAME, USER_PHONE, USER_PASSWORD, GENDER, ADDRESS_ID, BALANCE, ROLE, PRIORITY
+    </sql>
+    <insert id="registerUser">
+        INSERT INTO USERS VALUES (null, #{userName}, #{userPhone},#{userPassword}, #{gender},null, 10000,#{role},1,1 )
+    </insert>
+    <update id="payOrder">
+        UPDATE USERS
+        SET BALANCE = #{balance}
+        WHERE USER_ID = #{userId} AND IS_DELETE = 1
+    </update>
+    <update id="userMod">
+        UPDATE USERS
+        SET USER_NAME = #{userName}, USER_PHONE = #{userPhone}, USER_PASSWORD = #{userPassword}, GENDER = #{gender}, ROLE = #{role}
+        WHERE USER_ID = #{userId} AND IS_DELETE = 1
+    </update>
+    <update id="mod">
+        UPDATE USERS
+        SET USER_NAME = #{userName}, USER_PHONE = #{userPhone}, USER_PASSWORD = #{userPassword}, GENDER = #{gender}, BALANCE = #{balance} ,ROLE = #{role}, PRIORITY =#{priority}
+        WHERE USER_ID = #{userId} AND IS_DELETE = 1
+    </update>
+    <update id="deleteUserByUserId">
+    UPDATE USERS
+    SET IS_DELETE = 0
+    where USER_ID = #{userId}
+    </update>
+    <select id="selectBalanceByUserId" resultType="java.math.BigDecimal">
+        SELECT BALANCE
+        FROM USERS
+        WHERE USER_ID = #{userId} AND IS_DELETE = 1
+    </select>
+    <select id="selectPhone" resultType="java.lang.String">
+        SELECT USER_PHONE
+        FROM USERS
+        WHERE USER_PHONE = #{userPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectPassword" resultType="java.lang.String">
+        SELECT USER_PASSWORD
+        FROM USERS
+        WHERE USER_PHONE = #{userPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectUserIdByUserPhone" resultType="java.math.BigDecimal">
+        SELECT USER_ID
+        FROM USERS
+        WHERE USER_PHONE = #{userPhone} AND IS_DELETE = 1
+    </select>
+    <select id="selectUsersByUserId" resultType="band.zhaozhao.entity.Users">
+        SELECT *
+        FROM USERS
+        WHERE USER_ID = #{userId} AND IS_DELETE = 1
+    </select>
+    <select id="selectAllUser" resultType="band.zhaozhao.entity.Users">
+                SELECT *
+                FROM (
+                         SELECT "USERS".*,
+                                ROW_NUMBER() OVER(ORDER BY USER_ID ASC ) AS row_num
+                         FROM "USERS"
+                         WHERE IS_DELETE = 1
+                     ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectByName" resultType="band.zhaozhao.entity.Users">
+        SELECT *
+                FROM (
+                         SELECT "USERS".*,
+                                ROW_NUMBER() OVER(ORDER BY USER_ID ASC ) AS row_num
+                         FROM "USERS"
+                         Where "USERS".USER_NAME like '%'||#{userName}||'%' AND IS_DELETE = 1
+                     ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectUserNameByPhone" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT USER_NAME
+        FROM USERS
+        WHERE USER_PHONE = #{userPhone}
+    </select>
+    <select id="selectUserIdByUserPhone1" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT USER_ID
+        FROM USERS
+        WHERE USER_PHONE = #{userPhone}
+    </select>
+    <select id="selectAllUsers" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM USERS
+        WHERE IS_DELETE = 1
+    </select>
+    <select id="selectAllUsersByName" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM USERS
+        WHERE IS_DELETE = 1 AND USER_NAME like '%'||#{userName}||'%'
+    </select>
+
+</mapper>

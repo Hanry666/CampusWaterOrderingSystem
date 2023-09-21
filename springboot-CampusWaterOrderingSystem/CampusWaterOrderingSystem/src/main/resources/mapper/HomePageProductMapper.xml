@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.HomePageProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.HomePageProduct">
+        <id column="CAROUSEL_ID" property="carouselId" />
+        <result column="PRODUCT_ID" property="productId" />
+        <result column="IMAGE_URL" property="imageUrl" />
+        <result column="IS_DELETE" property="isDelete"/>
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        CAROUSEL_ID, PRODUCT_ID, IMAGE_URL
+    </sql>
+    <insert id="addHomePageProduct">
+        INSERT INTO HOMEPAGEPRODUCT VALUES (null,#{productId},#{imageUrl},1)
+    </insert>
+    <update id="modHomePageProduct">
+        UPDATE HOMEPAGEPRODUCT
+        SET PRODUCT_ID = #{productId}, IMAGE_URL = #{imageUrl}
+        WHERE CAROUSEL_ID = #{carouselId} AND IS_DELETE = 1
+    </update>
+    <update id="deleteHomePageProductByCarouselId">
+        UPDATE HOMEPAGEPRODUCT
+        SET IS_DELETE = 0
+        WHERE CAROUSEL_ID = #{carouselId}
+    </update>
+    <select id="selectAllProduct" resultType="band.zhaozhao.entity.HomePageProduct">
+        SELECT h.CAROUSEL_ID,h.PRODUCT_ID, p.PRODUCT_NAME, p.PRODUCT_PRICE, h.IMAGE_URL, c.CATEGORY_NAME
+        FROM HOMEPAGEPRODUCT h
+        JOIN PRODUCT p ON h.PRODUCT_ID = p.PRODUCT_ID
+        JOIN CATEGORY c ON p.CATEGORY_ID = c.CATEGORY_ID
+        WHERE h.IS_DELETE = 1 and p.IS_DELETE = 1 AND c.IS_DELETE = 1
+    </select>
+    <select id="selectIdByProductId" resultType="band.zhaozhao.entity.HomePageProduct">
+        SELECT *
+        FROM HOMEPAGEPRODUCT
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </select>
+    <select id="selectIdByCarouseId" resultType="band.zhaozhao.entity.HomePageProduct">
+        SELECT *
+        FROM HOMEPAGEPRODUCT
+        WHERE CAROUSEL_ID = #{carouselId} AND IS_DELETE = 1
+    </select>
+    <select id="selectAllHomePageProducts" resultType="band.zhaozhao.entity.HomePageProduct">
+        SELECT *
+        FROM (
+                 SELECT HOMEPAGEPRODUCT.*,
+                        ROW_NUMBER() OVER(ORDER BY CAROUSEL_ID ASC ) AS row_num
+                 FROM HOMEPAGEPRODUCT
+                 WHERE IS_DELETE = 1
+             ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+
+
+</mapper>

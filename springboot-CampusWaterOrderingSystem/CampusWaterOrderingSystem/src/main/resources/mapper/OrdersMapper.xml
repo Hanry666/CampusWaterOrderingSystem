@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.OrdersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Orders">
+        <id column="ORDER_ID" property="orderId" />
+        <result column="USER_ID" property="userId" />
+        <result column="DELIVERY_ID" property="deliveryId" />
+        <result column="ORDER_DATE" property="orderDate" />
+        <result column="TOTAL_AMOUNT" property="totalAmount" />
+        <result column="ORDER_STATUS" property="orderStatus" />
+        <result column="ORDER_NUMBER" property="orderNumber" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ORDER_ID, USER_ID, DELIVERY_ID, ORDER_DATE, TOTALA_MOUNT, ORDER_STATUS
+    </sql>
+    <insert id="addOrderByUserId">
+        INSERT INTO ORDERS values (null,#{userId},null,#{orderDate},#{totalAmount} ,'已下单',#{addressId})
+    </insert>
+    <update id="updateOrderStatusByOrderNumber">
+        UPDATE ORDERS
+        SET ORDER_STATUS = #{orderStatus}
+        WHERE ORDER_NUMBER = #{orderNumber}
+    </update>
+    <update id="updateStatusByOrderId">
+        UPDATE ORDERS
+        SET ORDER_STATUS = #{orderStatus}
+        WHERE ORDER_ID = #{orderId}
+    </update>
+    <update id="claimOrders">
+        UPDATE ORDERS
+        SET  ORDER_STATUS = '已接单', DELIVERY_ID = #{deliveryId}
+        WHERE ORDER_NUMBER = #{orderNumber}
+
+    </update>
+    <select id="selectUserIdByOrderNmber" resultType="java.math.BigDecimal">
+        select USER_ID
+        FROM ORDERS
+        WHERE ORDER_NUMBER = #{orderNumber}
+    </select>
+    <select id="selectOrderStatusByOrderNumber" resultType="java.lang.String">
+        SELECT ORDER_STATUS
+        FROM ORDERS
+        WHERE ORDER_NUMBER = #{orderNumber}
+    </select>
+    <select id="selectOrderByUser" resultType="band.zhaozhao.entity.Orders">
+        SELECT ORDER_ID,TOTAL_AMOUNT,ORDER_STATUS,ORDER_NUMBER
+        FROM ORDERS
+        WHERE USER_ID = #{userId} and ORDER_DATE = #{orderDate}
+    </select>
+    <select id="selectOrdersByUserId" resultType="band.zhaozhao.entity.Orders">
+        SELECT o.ORDER_ID, o.DELIVERY_ID,o.ORDER_DATE, o.TOTAL_AMOUNT, o.ORDER_STATUS, o.ORDER_NUMBER,d.DELIVERY_NAME, d.DELIVERY_PHONE
+        FROM ORDERS o
+        JOIN DELIVERY d ON o.DELIVERY_ID = d.DELIVERY_ID
+        WHERE USER_ID = #{userId} AND o.ORDER_STATUS = #{orderStatus} AND d.IS_DELETE = 1
+        ORDER BY o.ORDER_DATE DESC
+    </select>
+    <select id="selectByOrderId" resultType="band.zhaozhao.entity.Orders">
+        SELECT ORDER_ID, ORDER_NUMBER, ORDER_STATUS
+        FROM ORDERS
+        WHERE ORDER_ID = #{orderId}
+    </select>
+
+    <select id="selectOrdersByDeliveryId" resultType="band.zhaozhao.entity.Orders">
+        SELECT o.ORDER_ID, o.USER_ID,o.ORDER_DATE, o.TOTAL_AMOUNT, o.ORDER_STATUS, o.ORDER_NUMBER, u.USER_NAME, u.USER_PHONE
+        FROM ORDERS o
+                 JOIN USERS u ON o.USER_ID = u.USER_ID
+        WHERE DELIVERY_ID = #{deliveryId} AND o.ORDER_STATUS = #{orderStatus} AND u.IS_DELETE = 1
+        ORDER BY u.PRIORITY DESC
+    </select>
+    <select id="selectDeliveryIdByOrderId" resultType="java.math.BigDecimal">
+        SELECT DELIVERY_ID
+        FROM ORDERS
+        WHERE ORDER_ID = #{orderId}
+    </select>
+    <select id="selectOrderByUserId" resultType="band.zhaozhao.entity.Orders">
+        SELECT ORDER_ID,TOTAL_AMOUNT,ORDER_STATUS,ORDER_NUMBER
+        FROM ORDERS
+        WHERE USER_ID = #{userId} and ORDER_DATE = #{orderDate}
+    </select>
+    <select id="selectActiveOrdersByUserId" resultType="band.zhaozhao.entity.Orders">
+        SELECT o.ORDER_ID, o.DELIVERY_ID, o.ORDER_DATE, o.TOTAL_AMOUNT, o.ORDER_STATUS, o.ORDER_NUMBER,
+               CASE WHEN o.ORDER_STATUS = '已支付' THEN NULL ELSE d.DELIVERY_NAME END AS DELIVERY_NAME,
+               CASE WHEN o.ORDER_STATUS = '已支付' THEN NULL ELSE d.DELIVERY_PHONE END AS DELIVERY_PHONE
+        FROM ORDERS o
+                 LEFT JOIN DELIVERY d ON o.DELIVERY_ID = d.DELIVERY_ID
+        WHERE USER_ID = #{userId}
+          AND (o.ORDER_STATUS = '已支付' OR o.ORDER_STATUS = '已接单')
+        ORDER BY o.ORDER_ID DESC
+    </select>
+
+
+</mapper>

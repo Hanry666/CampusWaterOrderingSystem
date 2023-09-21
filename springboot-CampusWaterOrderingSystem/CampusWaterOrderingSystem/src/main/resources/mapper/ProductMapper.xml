@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Product">
+        <id column="PRODUCT_ID" property="productId" />
+        <result column="CATEGORY_ID" property="categoryId" />
+        <result column="IMAGE_ID" property="imageId" />
+        <result column="PRODUCT_NAME" property="productName" />
+        <result column="PRODUCT_DESCRIPTION" property="productDescription" />
+        <result column="PRODUCT_PRICE" property="productPrice" />
+        <result column="PRODUCT_STOCK" property="productStock" />
+        <result column="PRODUCT_STATUS" property="productStatus" />
+        <result column="PRODUCT_DETAILS" property="productDetails" />
+        <result column="IS_DELETE" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        PRODUCT_ID, CATEGORY_ID, IMAGE_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_STOCK, PRODUCT_STATUS, PRODUCT_DETAILS
+    </sql>
+    <insert id="addProdcuts">
+        INSERT INTO PRODUCT VALUES (null,#{categoryId},#{imageId},#{productName},#{productDescription},#{productPrice},#{productStock},#{productStatus},#{productDetails},1)
+    </insert>
+    <update id="upadteProductStock">
+        UPDATE PRODUCT
+        SET PRODUCT_STOCK = #{stock}
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </update>
+    <update id="modProductsById">
+        UPDATE PRODUCT
+        SET CATEGORY_ID = #{categoryId}, IMAGE_ID = #{imageId}, PRODUCT_NAME = #{productName}, PRODUCT_DESCRIPTION = #{productDescription}, PRODUCT_PRICE = #{productPrice}, PRODUCT_STOCK = #{productStock}, PRODUCT_STATUS =
+            #{productStatus}, PRODUCT_DETAILS = #{productDetails}
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </update>
+    <update id="deleteProductsByProductId">
+    UPDATE PRODUCT
+    SEt IS_DELETE = 0
+    WHERE PRODUCT_ID = #{productId}
+    </update>
+    <select id="getProductDetailsById" resultType="band.zhaozhao.entity.Product">
+        SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_DETAILS
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </select>
+    <select id="selectPriceById" resultType="java.lang.Integer">
+        SELECT PRODUCT_PRICE
+        FROM  PRODUCT
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </select>
+    <select id="selectProductPriceByProductId" resultType="java.math.BigDecimal">
+        SELECT PRODUCT_PRICE
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </select>
+    <select id="selectProductStockByProduct" resultType="java.math.BigDecimal">
+        SELECT PRODUCT_STOCK
+        FROM PRODUCT
+        WHERE PRODUCT_ID = #{productId} AND IS_DELETE = 1
+    </select>
+    <select id="selectProductByProductName" resultType="band.zhaozhao.entity.Product">
+        SELECT *
+        FROM PRODUCT
+        WHERE PRODUCT_NAME = #{productName} AND IS_DELETE = 1
+    </select>
+    <select id="selectAllProducts" resultType="band.zhaozhao.entity.Product">
+        SELECT *-->
+                FROM (
+                         SELECT PRODUCT.*,
+                                ROW_NUMBER() OVER(ORDER BY PRODUCT_ID ASC ) AS row_num
+                         FROM PRODUCT
+                         WHERE IS_DELETE = 1
+                     ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectProductsByName" resultType="band.zhaozhao.entity.Product">
+        SELECT *
+                FROM (
+                         SELECT PRODUCT.*,
+                                ROW_NUMBER() OVER(ORDER BY PRODUCT_ID ASC ) AS row_num
+                         FROM PRODUCT
+                         Where PRODUCT.PRODUCT_NAME like '%'||#{productName}||'%' AND IS_DELETE = 1
+                     ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="getAllProducts" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM PRODUCT
+        WHERE IS_DELETE = 1
+    </select>
+    <select id="selectAllProductByName" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM PRODUCT
+        WHERE IS_DELETE = 1 AND PRODUCT_NAME like '%'||#{productName}||'%'
+    </select>
+    <select id="selectProductIdByProductName" resultType="java.lang.Integer">
+        SELECT PRODUCT_ID
+        FROM PRODUCT
+        WHERE PRODUCT_NAME = #{productName}
+    </select>
+
+
+</mapper>

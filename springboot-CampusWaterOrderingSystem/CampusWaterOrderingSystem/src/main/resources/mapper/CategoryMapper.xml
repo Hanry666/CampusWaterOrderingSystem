@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="band.zhaozhao.mapper.CategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="band.zhaozhao.entity.Category">
+        <id column="CATEGORY_ID" property="categoryId" />
+        <result column="CATEGORY_NAME" property="categoryName" />
+        <result column="IS_DELETE" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        CATEGORY_ID, CATEGORY_NAME
+    </sql>
+    <insert id="addCategory">
+        INSERT INTO CATEGORY VALUES (null, #{categoryName},1)
+    </insert>
+    <update id="modCategoryByCategoryId">
+        UPDATE CATEGORY
+        SET CATEGORY_NAME = #{categoryName}
+        WHERE CATEGORY_ID = #{categoryId} and IS_DELETE = 1
+    </update>
+    <update id="deleteCategoryByCategoryId">
+        UPDATE CATEGORY
+        SET IS_DELETE = 0
+        WHERE CATEGORY_ID = #{categoryId} and IS_DELETE = 1
+    </update>
+    <select id="getAllCategories" resultType="band.zhaozhao.entity.Category">
+        SELECT * FROM CATEGORY
+        WHERE IS_DELETE = 1
+    </select>
+    <select id="selectCategoryByCategoryName" resultType="band.zhaozhao.entity.Category">
+        SELECT *
+        FROM CATEGORY
+        WHERE CATEGORY_NAME = #{categoryName} and IS_DELETE = 1
+    </select>
+    <select id="selectAllCategory" resultType="band.zhaozhao.entity.Category">
+                SELECT *
+                FROM (
+                         SELECT CATEGORY.*,
+                                ROW_NUMBER() OVER(ORDER BY CATEGORY_ID ASC ) AS row_num
+                         FROM CATEGORY
+                        WHERE IS_DELETE = 1
+                     ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectCategoryByName" resultType="band.zhaozhao.entity.Category">
+        SELECT *
+        FROM (
+                 SELECT CATEGORY.*,
+                        ROW_NUMBER() OVER(ORDER BY CATEGORY_ID ASC ) AS row_num
+                 FROM CATEGORY
+                 Where CATEGORY.CATEGORY_NAME like '%'||#{categoryName}||'%' AND IS_DELETE = 1
+             ) WHERE row_num BETWEEN #{pageNum} AND #{pageSize}
+    </select>
+    <select id="selectAllCategories" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM CATEGORY
+        WHERE IS_DELETE = 1
+    </select>
+    <select id="selectAllCategoriesByName" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM CATEGORY
+        WHERE IS_DELETE = 1 AND CATEGORY_NAME like '%'||#{categoryName}||'%'
+    </select>
+
+
+</mapper>
