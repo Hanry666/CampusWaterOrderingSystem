@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useAppStore } from "@/store/modules/app"
-import { useSettingsStore } from "@/store/modules/settings"
-import { AppMain, NavigationBar, Settings, Sidebar, TagsView, RightPanel } from "./components"
-import useResize from "./hooks/useResize"
-import { DeviceEnum } from "@/constants/app-key"
+import { computed } from "vue";
+import { useAppStore } from "@/store/modules/app";
+import { useSettingsStore } from "@/store/modules/settings";
+import { AppMain, NavigationBar, Settings, Sidebar, TagsView, RightPanel } from "./components";
+import useResize from "./hooks/useResize";
+import { DeviceEnum } from "@/constants/app-key";
 
-const appStore = useAppStore()
-const settingsStore = useSettingsStore()
+const appStore = useAppStore();
+const settingsStore = useSettingsStore();
 
 /** Layout 布局响应式 */
-useResize()
+useResize();
 
 const classObj = computed(() => {
   return {
@@ -20,27 +20,27 @@ const classObj = computed(() => {
     mobile: appStore.device === DeviceEnum.Mobile,
     showGreyMode: showGreyMode.value,
     showColorWeakness: showColorWeakness.value
-  }
-})
+  };
+});
 
 const showSettings = computed(() => {
-  return settingsStore.showSettings
-})
+  return settingsStore.showSettings;
+});
 const showTagsView = computed(() => {
-  return settingsStore.showTagsView
-})
+  return settingsStore.showTagsView;
+});
 const fixedHeader = computed(() => {
-  return settingsStore.fixedHeader
-})
+  return settingsStore.fixedHeader;
+});
 const showGreyMode = computed(() => {
-  return settingsStore.showGreyMode
-})
+  return settingsStore.showGreyMode;
+});
 const showColorWeakness = computed(() => {
-  return settingsStore.showColorWeakness
-})
+  return settingsStore.showColorWeakness;
+});
 const handleClickOutside = () => {
-  appStore.closeSidebar(false)
-}
+  appStore.closeSidebar(false);
+};
 </script>
 
 <template>

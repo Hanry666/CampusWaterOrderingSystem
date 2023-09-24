@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { type PropType, computed } from "vue"
-import { type RouteRecordRaw } from "vue-router"
-import SidebarItemLink from "./SidebarItemLink.vue"
-import { isExternal } from "@/utils/validate"
-import path from "path-browserify"
+import { type PropType, computed } from "vue";
+import { type RouteRecordRaw } from "vue-router";
+import SidebarItemLink from "./SidebarItemLink.vue";
+import { isExternal } from "@/utils/validate";
+import path from "path-browserify";
 
 const props = defineProps({
   item: {
@@ -22,47 +22,47 @@ const props = defineProps({
     type: String,
     default: ""
   }
-})
+});
 
 const alwaysShowRootMenu = computed(() => {
-  return props.item.meta && props.item.meta.alwaysShow
-})
+  return props.item.meta && props.item.meta.alwaysShow;
+});
 
 const showingChildNumber = computed(() => {
   if (props.item.children) {
     const showingChildren = props.item.children.filter((item) => {
-      return !(item.meta && item.meta.hidden)
-    })
-    return showingChildren.length
+      return !(item.meta && item.meta.hidden);
+    });
+    return showingChildren.length;
   }
-  return 0
-})
+  return 0;
+});
 
 const theOnlyOneChild = computed(() => {
   if (showingChildNumber.value > 1) {
-    return null
+    return null;
   }
   if (props.item.children) {
     for (const child of props.item.children) {
       if (!child.meta || !child.meta.hidden) {
-        return child
+        return child;
       }
     }
   }
   // If there is no children, return itself with path removed,
   // because this.basePath already contains item's path information
-  return { ...props.item, path: "" }
-})
+  return { ...props.item, path: "" };
+});
 
 const resolvePath = (routePath: string) => {
   if (isExternal(routePath)) {
-    return routePath
+    return routePath;
   }
   if (isExternal(props.basePath)) {
-    return props.basePath
+    return props.basePath;
   }
-  return path.resolve(props.basePath, routePath)
-}
+  return path.resolve(props.basePath, routePath);
+};
 </script>
 
 <template>

@@ -4,7 +4,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   }
-})
+});
 </script>
 
 <template>
@@ -15,7 +15,7 @@ const props = defineProps({
       </router-link>
       <router-link v-else key="expand" to="/">
         <!-- <img  src="@/assets/layout/jiaran.jpg" class="sidebar-logo-text" /> -->
-        <div style="color: blueviolet;font-size: 30px; font-family:'title';">赵昱哲666</div>
+        <div style="color: blueviolet; font-size: 30px; font-family: 'title'">赵昱哲666</div>
       </router-link>
     </transition>
   </div>

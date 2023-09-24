@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { useTheme } from '@/hooks/useTheme';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import { useRouter } from 'vue-router';
+import { useTheme } from "@/hooks/useTheme";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import { useRouter } from "vue-router";
 const router = useRouter();
 console.log(router);
 

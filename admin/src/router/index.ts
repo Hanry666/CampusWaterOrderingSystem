@@ -1,6 +1,6 @@
-import { type RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router"
+import { type RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
-const Layout = () => import("@/layout/index.vue")
+const Layout = () => import("@/layout/index.vue");
 
 /** 常驻路由 */
 export const constantRoutes: RouteRecordRaw[] = [
@@ -78,7 +78,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/",
     component: Layout,
-    redirect:"/products",
+    redirect: "/products",
     name: "items",
     meta: {
       title: "商品管理",
@@ -102,7 +102,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "商品分类管理",
           keepAlive: true
         }
-      },
+      }
     ]
   },
   {
@@ -132,10 +132,10 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "配送员管理",
           keepAlive: true
         }
-      },
+      }
     ]
   }
-]
+];
 
 /**
  * 动态路由
@@ -182,7 +182,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
       hidden: true
     }
   }
-]
+];
 
 const router = createRouter({
   history:
@@ -190,22 +190,22 @@ const router = createRouter({
       ? createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH)
       : createWebHistory(import.meta.env.VITE_PUBLIC_PATH),
   routes: constantRoutes
-})
+});
 
 /** 重置路由 */
 export function resetRouter() {
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
     router.getRoutes().forEach((route) => {
-      const { name, meta } = route
+      const { name, meta } = route;
       if (name && meta.roles?.length) {
-        router.hasRoute(name) && router.removeRoute(name)
+        router.hasRoute(name) && router.removeRoute(name);
       }
-    })
+    });
   } catch (error) {
     // 强制刷新浏览器也行，只是交互体验不是很好
-    window.location.reload()
+    window.location.reload();
   }
 }
 
-export default router
+export default router;

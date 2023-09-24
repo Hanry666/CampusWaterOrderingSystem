@@ -1,41 +1,41 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useRouter } from "vue-router"
-import { useAppStore } from "@/store/modules/app"
-import { useSettingsStore } from "@/store/modules/settings"
-import { useUserStore } from "@/store/modules/user"
-import { UserFilled } from "@element-plus/icons-vue"
-import Breadcrumb from "../Breadcrumb/index.vue"
-import Hamburger from "../Hamburger/index.vue"
-import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
-import Screenfull from "@/components/Screenfull/index.vue"
-import Notify from "@/components/Notify/index.vue"
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { useAppStore } from "@/store/modules/app";
+import { useSettingsStore } from "@/store/modules/settings";
+import { useUserStore } from "@/store/modules/user";
+import { UserFilled } from "@element-plus/icons-vue";
+import Breadcrumb from "../Breadcrumb/index.vue";
+import Hamburger from "../Hamburger/index.vue";
+import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+import Screenfull from "@/components/Screenfull/index.vue";
+import Notify from "@/components/Notify/index.vue";
 
-const router = useRouter()
-const appStore = useAppStore()
-const settingsStore = useSettingsStore()
-const userStore = useUserStore()
+const router = useRouter();
+const appStore = useAppStore();
+const settingsStore = useSettingsStore();
+const userStore = useUserStore();
 
 const sidebar = computed(() => {
-  return appStore.sidebar
-})
+  return appStore.sidebar;
+});
 const showNotify = computed(() => {
-  return settingsStore.showNotify
-})
+  return settingsStore.showNotify;
+});
 const showThemeSwitch = computed(() => {
-  return settingsStore.showThemeSwitch
-})
+  return settingsStore.showThemeSwitch;
+});
 const showScreenfull = computed(() => {
-  return settingsStore.showScreenfull
-})
+  return settingsStore.showScreenfull;
+});
 
 const toggleSidebar = () => {
-  appStore.toggleSidebar(false)
-}
+  appStore.toggleSidebar(false);
+};
 const logout = () => {
-  userStore.logout()
-  router.push("/login")
-}
+  userStore.logout();
+  router.push("/login");
+};
 </script>
 
 <template>

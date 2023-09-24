@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
-import { useRouter } from "vue-router"
-import { useUserStore } from "@/store/modules/user"
-import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
-import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
-import { type FormInstance, FormRules } from "element-plus"
-import { getLoginCodeApi } from "@/api/login"
-import { type LoginRequestData } from "@/api/login/types/login"
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/modules/user";
+import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue";
+import ThemeSwitch from "@/components/ThemeSwitch/index.vue";
+import { type FormInstance, FormRules } from "element-plus";
+import { getLoginCodeApi } from "@/api/login";
+import { type LoginRequestData } from "@/api/login/types/login";
 
-const router = useRouter()
-const loginFormRef = ref<FormInstance | null>(null)
+const router = useRouter();
+const loginFormRef = ref<FormInstance | null>(null);
 
 /** 登录按钮 Loading */
-const loading = ref(false)
+const loading = ref(false);
 /** 验证码图片 URL */
-const codeUrl = ref("")
+const codeUrl = ref("");
 /** 登录表单数据 */
 const loginForm: LoginRequestData = reactive({
   username: "admin",
   password: "12345678",
   code: ""
-})
+});
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -29,12 +29,12 @@ const loginFormRules: FormRules = {
     { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
   ],
   code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
-}
+};
 /** 登录逻辑 */
 const handleLogin = () => {
   loginFormRef.value?.validate((valid: boolean) => {
     if (valid) {
-      loading.value = true
+      loading.value = true;
       useUserStore()
         .login({
           username: loginForm.username,
@@ -42,35 +42,35 @@ const handleLogin = () => {
           code: loginForm.code
         })
         .then(() => {
-          router.push({ path: "/" })
+          router.push({ path: "/" });
         })
         .catch(() => {
-          createCode()
-          loginForm.password = ""
+          createCode();
+          loginForm.password = "";
         })
         .finally(() => {
-          loading.value = false
-        })
+          loading.value = false;
+        });
     } else {
-      return false
+      return false;
     }
-  })
-}
+  });
+};
 /** 创建验证码 */
 const createCode = () => {
   // 先清空验证码的输入
-  loginForm.code = ""
+  loginForm.code = "";
   // 获取验证码
-  codeUrl.value = ""
+  codeUrl.value = "";
   getLoginCodeApi().then((res) => {
     console.log(res);
-    
-    codeUrl.value = res.data
-  })
-}
+
+    codeUrl.value = res.data;
+  });
+};
 
 /** 初始化验证码 */
-createCode()
+createCode();
 </script>
 
 <template>
@@ -160,7 +160,7 @@ createCode()
       .title-text {
         margin-top: 50px;
         font-size: 40px;
-        font-family: 'title';
+        font-family: "title";
       }
     }
     .content {

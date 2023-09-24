@@ -1,39 +1,25 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
-import {
-  getAllUsersApi,
-  selectUsersByuserNameApi,
-  deleteUserApi,
-} from '@/api/users/category';
-import { type GetAllDeliveryData as GetTableData } from '@/api/users/category/types/index';
-import { type FormInstance, ElMessage, ElMessageBox } from 'element-plus';
-import {
-  Search,
-  Refresh,
-  Download,
-  RefreshRight,
-} from '@element-plus/icons-vue';
-import { usePagination } from '@/hooks/usePagination';
+import { reactive, ref, watch } from "vue";
+import { getAllUsersApi, selectUsersByuserNameApi, deleteUserApi } from "@/api/users/category";
+import { type GetAllDeliveryData as GetTableData } from "@/api/users/category/types/index";
+import { type FormInstance, ElMessage, ElMessageBox } from "element-plus";
+import { Search, Refresh, Download, RefreshRight } from "@element-plus/icons-vue";
+import { usePagination } from "@/hooks/usePagination";
 defineOptions({
-  name: 'products',
+  name: "products"
 });
 const loading = ref<boolean>(false);
-const { paginationData, handleCurrentChange, handleSizeChange } =
-  usePagination();
+const { paginationData, handleCurrentChange, handleSizeChange } = usePagination();
 
 //#region 删
 const handleDelete = (row: GetTableData) => {
-  ElMessageBox.confirm(
-    `正在删除用户：${row.deliveryName}，确认删除？`,
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).then(() => {
+  ElMessageBox.confirm(`正在删除用户：${row.deliveryName}，确认删除？`, "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning"
+  }).then(() => {
     deleteUserApi({ deliveryId: row.deliveryId }).then(() => {
-      ElMessage.success('删除成功');
+      ElMessage.success("删除成功");
       getTableData();
     });
   });
@@ -44,7 +30,7 @@ const handleDelete = (row: GetTableData) => {
 const tableData = reactive<GetTableData[]>([]);
 const searchFormRef = ref<FormInstance | null>(null);
 const searchData = reactive({
-  deliveryName: '',
+  deliveryName: ""
 });
 const getTableData = () => {
   loading.value = true;
@@ -52,7 +38,7 @@ const getTableData = () => {
     selectUsersByuserNameApi(
       {
         pageNum: paginationData.currentPage,
-        pageSize: paginationData.pageSize,
+        pageSize: paginationData.pageSize
       },
       { deliveryName: searchData.deliveryName }
     )
@@ -71,7 +57,7 @@ const getTableData = () => {
   } else {
     getAllUsersApi({
       pageSize: paginationData.pageSize,
-      pageNum: paginationData.currentPage,
+      pageNum: paginationData.currentPage
     })
       .then((res) => {
         tableData.length = 0;
@@ -94,7 +80,7 @@ const handleSearch = () => {
   paginationData.currentPage = 1;
 };
 const resetSearch = () => {
-  searchData.deliveryName = '';
+  searchData.deliveryName = "";
   searchFormRef.value?.resetFields();
   if (paginationData.currentPage === 1) {
     getTableData();
@@ -107,17 +93,13 @@ const handleRefresh = () => {
 //#endregion
 
 /** 监听分页参数的变化 */
-watch(
-  [() => paginationData.currentPage, () => paginationData.pageSize],
-  getTableData,
-  { immediate: true }
-);
+watch([() => paginationData.currentPage, () => paginationData.pageSize], getTableData, { immediate: true });
 
 function showDetails(val: string) {
   console.log(val);
 
-  ElMessageBox.alert(val, '配送员密码', {
-    confirmButtonText: '关闭',
+  ElMessageBox.alert(val, "配送员密码", {
+    confirmButtonText: "关闭"
   });
 }
 </script>
@@ -157,8 +139,9 @@ function showDetails(val: string) {
           <el-table-column prop="balance" label="余额" align="center" />
           <el-table-column prop="userPassword" label="密码" align="center">
             <template #default="scope">
-              <el-button type="primary" text bg size="small"
-                @click="showDetails(scope.row.deliveryPassword)">查看密码</el-button>
+              <el-button type="primary" text bg size="small" @click="showDetails(scope.row.deliveryPassword)"
+                >查看密码</el-button
+              >
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -169,9 +152,16 @@ function showDetails(val: string) {
         </el-table>
       </div>
       <div class="pager-wrapper">
-        <el-pagination background :layout="paginationData.layout" :page-sizes="paginationData.pageSizes"
-          :total="paginationData.total" :page-size="paginationData.pageSize" :currentPage="paginationData.currentPage"
-          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        <el-pagination
+          background
+          :layout="paginationData.layout"
+          :page-sizes="paginationData.pageSizes"
+          :total="paginationData.total"
+          :page-size="paginationData.pageSize"
+          :currentPage="paginationData.currentPage"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </el-card>
   </div>

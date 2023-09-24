@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed } from "vue";
 
 const props = defineProps({
   prefix: {
@@ -10,9 +10,9 @@ const props = defineProps({
     type: String,
     required: true
   }
-})
+});
 
-const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+const symbolId = computed(() => `#${props.prefix}-${props.name}`);
 </script>
 
 <template>

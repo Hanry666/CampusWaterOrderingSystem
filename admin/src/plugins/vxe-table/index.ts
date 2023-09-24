@@ -1,10 +1,10 @@
-import { type App } from "vue"
+import { type App } from "vue";
 // https://vxetable.cn/#/table/start/install
-import VXETable from "vxe-table"
+import VXETable from "vxe-table";
 // https://github.com/x-extends/vxe-table-plugin-element
-import VXETablePluginElement from "vxe-table-plugin-element"
+import VXETablePluginElement from "vxe-table-plugin-element";
 
-VXETable.use(VXETablePluginElement)
+VXETable.use(VXETablePluginElement);
 
 /** 全局默认参数 */
 VXETable.setup({
@@ -58,9 +58,9 @@ VXETable.setup({
     transfer: true,
     draggable: false
   }
-})
+});
 
 export function loadVxeTable(app: App) {
   /** Vxe Table 组件完整引入 */
-  app.use(VXETable)
+  app.use(VXETable);
 }

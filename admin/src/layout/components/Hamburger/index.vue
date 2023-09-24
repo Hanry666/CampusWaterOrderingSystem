@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { Expand, Fold } from "@element-plus/icons-vue"
+import { Expand, Fold } from "@element-plus/icons-vue";
 
 const props = defineProps({
   isActive: {
     type: Boolean,
     default: false
   }
-})
+});
 
 /** Vue 3.3+ defineEmits 语法 */
 const emit = defineEmits<{
-  toggleClick: []
-}>()
+  toggleClick: [];
+}>();
 
 const toggleClick = () => {
-  emit("toggleClick")
-}
+  emit("toggleClick");
+};
 </script>
 
 <template>

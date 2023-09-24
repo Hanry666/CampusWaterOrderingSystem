@@ -1,45 +1,45 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue"
-import { type RouteLocationMatched, useRoute, useRouter } from "vue-router"
-import { compile } from "path-to-regexp"
+import { ref, watch } from "vue";
+import { type RouteLocationMatched, useRoute, useRouter } from "vue-router";
+import { compile } from "path-to-regexp";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const breadcrumbs = ref<RouteLocationMatched[]>([])
+const breadcrumbs = ref<RouteLocationMatched[]>([]);
 
 const getBreadcrumb = () => {
   breadcrumbs.value = route.matched.filter((item) => {
-    return item.meta && item.meta.title && item.meta.breadcrumb !== false
-  })
-}
+    return item.meta && item.meta.title && item.meta.breadcrumb !== false;
+  });
+};
 
 const pathCompile = (path: string) => {
-  const { params } = route
-  const toPath = compile(path)
-  return toPath(params)
-}
+  const { params } = route;
+  const toPath = compile(path);
+  return toPath(params);
+};
 
 const handleLink = (item: RouteLocationMatched) => {
-  const { redirect, path } = item
+  const { redirect, path } = item;
   if (redirect) {
-    router.push(redirect as string)
-    return
+    router.push(redirect as string);
+    return;
   }
-  router.push(pathCompile(path))
-}
+  router.push(pathCompile(path));
+};
 
 watch(
   () => route.path,
   (path) => {
     if (path.startsWith("/redirect/")) {
-      return
+      return;
     }
-    getBreadcrumb()
+    getBreadcrumb();
   }
-)
+);
 
-getBreadcrumb()
+getBreadcrumb();
 </script>
 
 <template>

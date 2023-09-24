@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { isExternal } from "@/utils/validate"
+import { isExternal } from "@/utils/validate";
 
 const props = defineProps({
   to: {
     type: String,
     required: true
   }
-})
+});
 </script>
 
 <template>

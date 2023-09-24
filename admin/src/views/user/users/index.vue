@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue"
-import { getAllUsersApi, selectUsersByuserNameApi, deleteUserApi } from "@/api/users/user"
-import { type GetAllUsersData as GetTableData } from "@/api/users/user/types/index"
-import { type FormInstance, ElMessage, ElMessageBox } from "element-plus"
-import { Search, Refresh, Download, RefreshRight } from "@element-plus/icons-vue"
-import { usePagination } from "@/hooks/usePagination"
+import { reactive, ref, watch } from "vue";
+import { getAllUsersApi, selectUsersByuserNameApi, deleteUserApi } from "@/api/users/user";
+import { type GetAllUsersData as GetTableData } from "@/api/users/user/types/index";
+import { type FormInstance, ElMessage, ElMessageBox } from "element-plus";
+import { Search, Refresh, Download, RefreshRight } from "@element-plus/icons-vue";
+import { usePagination } from "@/hooks/usePagination";
 defineOptions({
   name: "products"
-})
-const loading = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
-
+});
+const loading = ref<boolean>(false);
+const { paginationData, handleCurrentChange, handleSizeChange } = usePagination();
 
 //#region 删
 const handleDelete = (row: GetTableData) => {
@@ -20,23 +19,21 @@ const handleDelete = (row: GetTableData) => {
     type: "warning"
   }).then(() => {
     deleteUserApi({ userId: row.userId }).then(() => {
-      ElMessage.success("删除成功")
-      getTableData()
-    })
-  })
-}
+      ElMessage.success("删除成功");
+      getTableData();
+    });
+  });
+};
 //#endregion
 
-
 //#region 查
-const tableData = reactive<GetTableData[]>([])
-const searchFormRef = ref<FormInstance | null>(null)
+const tableData = reactive<GetTableData[]>([]);
+const searchFormRef = ref<FormInstance | null>(null);
 const searchData = reactive({
   userName: ""
-})
+});
 const getTableData = () => {
-
-  loading.value = true
+  loading.value = true;
   if (searchData.userName.length !== 0) {
     selectUsersByuserNameApi(
       {
@@ -46,66 +43,65 @@ const getTableData = () => {
       { userName: searchData.userName }
     )
       .then((res) => {
-        tableData.length = 0
+        tableData.length = 0;
         paginationData.total = res.data.totalRecords;
-        tableData.push(...res.data.usersList)
+        tableData.push(...res.data.usersList);
       })
       .catch((e) => {
-        console.log(e)
-        tableData.length = 0
+        console.log(e);
+        tableData.length = 0;
       })
       .finally(() => {
-        loading.value = false
-      })
+        loading.value = false;
+      });
   } else {
     getAllUsersApi({
       pageSize: paginationData.pageSize,
       pageNum: paginationData.currentPage
     })
       .then((res) => {
-        tableData.length = 0
+        tableData.length = 0;
         paginationData.total = res.data.totalRecords;
-        tableData.push(...res.data.usersList)
+        tableData.push(...res.data.usersList);
         console.log(res, tableData);
-
       })
       .catch((e) => {
-        console.log(e)
-        tableData.length = 0
+        console.log(e);
+        tableData.length = 0;
       })
       .finally(() => {
-        loading.value = false
-      })
+        loading.value = false;
+      });
   }
-}
+};
 const handleSearch = () => {
   if (paginationData.currentPage === 1) {
-    getTableData()
+    getTableData();
   }
-  paginationData.currentPage = 1
-}
+  paginationData.currentPage = 1;
+};
 const resetSearch = () => {
-  searchData.userName = '';
-  searchFormRef.value?.resetFields()
+  searchData.userName = "";
+  searchFormRef.value?.resetFields();
   if (paginationData.currentPage === 1) {
-    getTableData()
+    getTableData();
   }
-  paginationData.currentPage = 1
-}
+  paginationData.currentPage = 1;
+};
 const handleRefresh = () => {
-  getTableData()
-}
+  getTableData();
+};
 //#endregion
 
 /** 监听分页参数的变化 */
-watch([() => paginationData.currentPage, () => paginationData.pageSize], getTableData, { immediate: true })
+watch([() => paginationData.currentPage, () => paginationData.pageSize], getTableData, { immediate: true });
 
 function showDetails(val: string) {
-  console.log(val)
+  console.log(val);
 
   ElMessageBox.alert(val, "用户密码", {
     confirmButtonText: "关闭"
-  })
+  });
 }
 </script>
 
@@ -143,7 +139,7 @@ function showDetails(val: string) {
           <el-table-column prop="gender" label="性别" align="center" />
           <el-table-column prop="addressId" label="地址id" align="center">
             <template #default="scope">
-              <span>{{ scope.row.addressId || '-' }}</span>
+              <span>{{ scope.row.addressId || "-" }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="balance" label="余额" align="center">
@@ -154,7 +150,9 @@ function showDetails(val: string) {
           <el-table-column prop="priority" label="权重" align="center" />
           <el-table-column prop="userPassword" label="密码" align="center">
             <template #default="scope">
-              <el-button type="primary" text bg size="small" @click="showDetails(scope.row.userPassword)">查看密码</el-button>
+              <el-button type="primary" text bg size="small" @click="showDetails(scope.row.userPassword)"
+                >查看密码</el-button
+              >
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -165,9 +163,16 @@ function showDetails(val: string) {
         </el-table>
       </div>
       <div class="pager-wrapper">
-        <el-pagination background :layout="paginationData.layout" :page-sizes="paginationData.pageSizes"
-          :total="paginationData.total" :page-size="paginationData.pageSize" :currentPage="paginationData.currentPage"
-          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        <el-pagination
+          background
+          :layout="paginationData.layout"
+          :page-sizes="paginationData.pageSizes"
+          :total="paginationData.total"
+          :page-size="paginationData.pageSize"
+          :currentPage="paginationData.currentPage"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </el-card>
   </div>

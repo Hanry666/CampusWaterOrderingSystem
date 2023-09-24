@@ -1,21 +1,20 @@
 export interface CategoryData {
-  "categoryId": number
-  "categoryName": string
-  "isDelete": number
+  categoryId: number;
+  categoryName: string;
+  isDelete: number;
 }
 
-export type  getAllCategoriesRes =ApiResponseData<Array<CategoryData>> 
-
+export type getAllCategoriesRes = ApiResponseData<Array<CategoryData>>;
 
 export interface addCategoryReq {
-  categoryName:string;
+  categoryName: string;
 }
 
 export interface deleteCategoryReq {
-  categoryId:number;
+  categoryId: number;
 }
- 
+
 export interface modCategoryReq {
-  categoryId:number;
-  categoryName:string;
+  categoryId: number;
+  categoryName: string;
 }
