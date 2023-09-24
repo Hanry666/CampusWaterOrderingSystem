@@ -6,6 +6,7 @@
 后台 v3-admin-vite
 
 - 使用pnpm
+- 使用pnpm 的 monorepo架构管理前端
 
 `pnpm -F admin xxx` 后台
 
